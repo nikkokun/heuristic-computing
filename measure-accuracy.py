@@ -13,6 +13,12 @@ from annoy import AnnoyIndex
 from sklearn.metrics import classification_report
 import yagmail
 import os
+import sys
+import getopt
+import json
+
+def usage():
+    print('-m = string\tmodel id')
 
 def reset_tf_session():
     curr_session = tf.get_default_session()
@@ -85,18 +91,25 @@ class ModelMetrics():
 
         return result
 
-def main():
+def main(opts):
     """ Main entry point of the app """
+
+    for opt, arg in opts:
+        if opt in ('-h', '--help'):
+            usage()
+            sys.exit(2)
+        elif opt in ('-m', '--model'):
+            model_id = arg
+        else:
+            usage()
+            sys.exit(2)
 
     reset_tf_session()
 
-    model_id = 'multitaskfinal'
+    email = os.getenv('GMAIL')
+    yag = yagmail.SMTP(email)
 
-    email = os.environ.get('GMAIL')
-    pswd = os.environ.get('GMAILPASS')
-    yag = yagmail.SMTP(email, pswd)
-
-    top_n = {1: None, 2: None}
+    top_n = {1: None, 2: None, 4: None, 8: None, 16: None, 32: None, 64: None}
 
     model_metrics = ModelMetrics(model_id, 32)
 
@@ -108,10 +121,33 @@ def main():
         results = model_metrics.get_scores(key)
         top_n[key] = results
         print(results)
-        print('\n')
+        break
 
-    print(top_n)
+    with open('results.json', 'r') as f:
+        results_json = json.load(f)
+
+    results = json.loads(results_json)
+    results[model_id] = top_n
+
+    results_json = json.dumps(results)
+
+    mail_content = F'''
+    Finished measuring accuracy for {model_id}.
+    The results are:
+    {results_json}
+    '''
+
+    yag.send(to='mizutaninikkou@gmail.com', subject='Finished Measuring Accuracy', contents=mail_content)
+    with open('results.json', 'w') as f:
+        json.dump(results_json, f)
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
-    main()
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'm:h', ['model=', 'help'])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+
+    main(opts)
