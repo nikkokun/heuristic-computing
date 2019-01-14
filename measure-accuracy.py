@@ -57,7 +57,7 @@ class ModelMetrics():
     def build_annoy_index(self):
         print('building annoy index...\n')
 
-        self.annoy_index = AnnoyIndex(self.bit_size, metric='angular')
+        self.annoy_index = AnnoyIndex(self.bitsize, metric='angular')
 
         for i in range(len(self.val_codes)):
             self.annoy_index.add_item(i, self.val_codes[i])
