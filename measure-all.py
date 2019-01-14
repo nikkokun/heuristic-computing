@@ -8,7 +8,7 @@ import os
 
 def main():
     """ Main entry point of the app """
-    models = ['basefinal', 'final02', 'augmented02', 'multitaskfinal']
+    models = ['basefinal', 'final01', 'augmented02', 'multitaskfinal']
 
     for model in models:
         command = F'python measure-accuracy.py -m {model}'

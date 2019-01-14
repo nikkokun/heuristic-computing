@@ -121,7 +121,6 @@ def main(opts):
         results = model_metrics.get_scores(key)
         top_n[key] = results
         print(results)
-        break
 
     with open('results.json', 'r') as f:
         results_json = json.load(f)
