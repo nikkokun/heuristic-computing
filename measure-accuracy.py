@@ -104,11 +104,13 @@ def main():
     model_metrics.build_annoy_index()
 
     for key, value in top_n.items():
-        print(F'getting scores for {model_id} for top-{key} results...')
+        print(F'getting scores top-{key} scores for {model_id}...')
         results = model_metrics.get_scores(key)
         top_n[key] = results
         print(results)
         print('\n')
+
+    print(top_n)
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
