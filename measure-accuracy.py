@@ -77,7 +77,7 @@ class ModelMetrics():
                                                n=n,
                                                search_k=200000
                                                )
-            self.y_pred = self.y_val[y_pred]
+            y_pred = self.y_val[y_pred]
             for val in y_pred:
                 y_pred_vals.append(val)
 
