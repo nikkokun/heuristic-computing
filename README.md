@@ -3,6 +3,7 @@
 
 ## Requirements
 
-- tensorflow 1.0.0 or above
-- keras 2.0.0 or above
+- tensorflow 1.4.0 or above
+- tensorboard 0.4.0
+- keras 2.1.5 or above
 - annoy 1.0.0 or above
